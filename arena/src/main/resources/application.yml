@@ -16,10 +16,10 @@ spring:
     profiles:
       include:
         - oauth2
-  server:
-    port: 9000
-    servlet:
-      session:
-        cookie:
-          same-site: none
-          secure: true
+server:
+  port: 9000
+  servlet:
+    session:
+      cookie:
+        same-site: none
+        secure: true
