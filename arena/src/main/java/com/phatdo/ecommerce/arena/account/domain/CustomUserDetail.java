@@ -11,8 +11,7 @@ public record CustomUserDetail(Account account) implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        GrantedAuthority authority = new SimpleGrantedAuthority(account.getRole().toString());
-        return List.of(authority);
+        return List.of();
     }
 
     @Override

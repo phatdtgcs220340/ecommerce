@@ -9,4 +9,9 @@ public class ArenaException extends Exception {
   public ArenaException(ArenaError error) {
     this.error = error;
   }
+
+  @Override
+  public String getMessage() {
+    return this.error.getMessage();
+  }
 }

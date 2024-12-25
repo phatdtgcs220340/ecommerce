@@ -1,5 +1,6 @@
 package com.phatdo.ecommerce.arena.account.domain;
 
+import com.phatdo.ecommerce.arena.accountseller.domain.AccountSeller;
 import com.phatdo.ecommerce.arena.customer.domain.Customer;
 import com.phatdo.ecommerce.arena.seller.domain.Seller;
 import jakarta.persistence.*;
@@ -8,9 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Data
 @RequiredArgsConstructor
@@ -28,12 +27,23 @@ public class Account {
 
     private String password;
 
-    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "account",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private Customer customer;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<Seller> sellers = new ArrayList<>();
+    @OneToMany(mappedBy = "account",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private final Set<AccountSeller> sellers = new HashSet<>();
 
     @Transient
     private Role role;
+
+    public enum Role {
+        CUSTOMER,
+        SELLER
+    }
 }

@@ -3,6 +3,7 @@ package com.phatdo.ecommerce.arena.utils.configuration.security;
 import com.phatdo.ecommerce.arena.account.repository.AccountRepository;
 import com.phatdo.ecommerce.arena.account.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.context.annotation.Bean;
@@ -18,7 +19,6 @@ import static com.phatdo.ecommerce.arena.utils.commons.APIController.ACCOUNT_PAT
 @Configuration
 public class SecurityConfig {
     private final AccountRepository accountRepository;
-
     @Autowired
     public SecurityConfig(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
@@ -35,13 +35,15 @@ public class SecurityConfig {
     }
 
     @Bean
+    @Order(2)
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+                .formLogin(form -> form
+                        .loginProcessingUrl("/api/account/login")
+                        .defaultSuccessUrl("/authorization"))
                 .authorizeHttpRequests(c -> c
-                        .requestMatchers(HttpMethod.GET, ACCOUNT_PATH, String.format("%s/**", ACCOUNT_PATH)).permitAll()
+                        .requestMatchers(HttpMethod.POST, ACCOUNT_PATH, String.format("%s/**", ACCOUNT_PATH)).permitAll()
                         .anyRequest().authenticated())
-                .sessionManagement(c -> c
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
                 .build();
     }
