@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: arena
+  datasource:
+    url: jdbc:postgresql://arena-postgres:5432/arena-db
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    jpa:
+      hibernate:
+        ddl-auto: create
+    data:
+      redis:
+        host: arena-redis
+        port: 6379
+        password: ${REDIS_HOST_PASSWORD}
+    profiles:
+      include:
+        - oauth2
+server:
+  port: 9000
+  servlet:
+    session:
+      cookie:
+        same-site: none
+        secure: true
