@@ -2,7 +2,6 @@ package com.phatdo.ecommerce.arena.account.domain;
 
 import com.phatdo.ecommerce.arena.accountseller.domain.AccountSeller;
 import com.phatdo.ecommerce.arena.customer.domain.Customer;
-import com.phatdo.ecommerce.arena.seller.domain.Seller;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -44,6 +43,7 @@ public class Account {
 
     public enum Role {
         CUSTOMER,
-        SELLER
+        SELLER,
+        ADMINISTRATOR
     }
 }

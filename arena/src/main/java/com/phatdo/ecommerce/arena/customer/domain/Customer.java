@@ -18,6 +18,12 @@ public class Customer {
     @Column(unique = true)
     private final UUID uuid = new UUID(1, UUID.randomUUID().getMostSignificantBits());
 
+    private String avatar;
+
+    private String telephone;
+
+    private String country;
+
     @OneToOne
     @JoinColumn(name = "account_uuid")
     private final Account account;

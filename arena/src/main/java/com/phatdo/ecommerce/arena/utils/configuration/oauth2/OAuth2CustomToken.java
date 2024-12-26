@@ -11,6 +11,8 @@ import org.springframework.security.oauth2.core.oidc.endpoint.OidcParameterNames
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 
+import java.util.List;
+
 @Configuration
 public class OAuth2CustomToken {
     private final AccountService accountService;
@@ -23,12 +25,20 @@ public class OAuth2CustomToken {
     @Bean
     public OAuth2TokenCustomizer<JwtEncodingContext> jwtCustomizer() {
         return context ->
-                context.getClaims().claims((claims) -> {
+                context.getClaims().claims(claims -> {
+                    if (((List<String>) claims.get("scope")).contains("SELLER"))
+                        claims.put("role", "SELLER");
+                    else
+                        claims.put("role", "CUSTOMER");
                     if (OidcParameterNames.ID_TOKEN.equals(context.getTokenType().getValue())) {
                         String username = context.getPrincipal().getName();
                         Account account = ((CustomUserDetail) accountService
                                 .loadUserByUsername(username))
                                 .account();
+                        if (((List<String>) claims.get("scope")).contains("SELLER"))
+                            account.setRole(Account.Role.SELLER);
+                        else
+                            account.setRole(Account.Role.CUSTOMER);
                         OidcUserInfo userInfo = accountService.loadAccount(account);
                         claims.putAll(userInfo.getClaims());
                     }

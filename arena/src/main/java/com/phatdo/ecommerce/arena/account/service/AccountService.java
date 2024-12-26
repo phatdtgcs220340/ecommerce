@@ -3,16 +3,10 @@ package com.phatdo.ecommerce.arena.account.service;
 import com.phatdo.ecommerce.arena.account.domain.Account;
 import com.phatdo.ecommerce.arena.account.domain.CustomUserDetail;
 import com.phatdo.ecommerce.arena.account.repository.AccountRepository;
-import com.phatdo.ecommerce.arena.account.request.LoginDTO;
 import com.phatdo.ecommerce.arena.account.request.RegisterDTO;
 import com.phatdo.ecommerce.arena.utils.exceptionhandler.domain.ArenaException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -55,9 +49,14 @@ public class AccountService implements UserDetailsService {
     }
 
     public OidcUserInfo loadAccount(Account account) {
+        String avatar = "";
+        if (account.getRole().equals(Account.Role.CUSTOMER)) {
+            avatar = account.getCustomer().getAvatar();
+        }
         return new OidcUserInfo(OidcUserInfo.builder()
                 .name(account.getFullName())
                 .email(account.getEmail())
+                .picture(avatar)
                 .build().getClaims());
     }
 }

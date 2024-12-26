@@ -20,6 +20,20 @@ public class Seller {
     @Column(unique = true)
     private final UUID uuid = new UUID(1, UUID.randomUUID().getMostSignificantBits());
 
+    private String name;
+
+    private String shopLogo;
+
+    private String telephone;
+
+    private String country;
+
+    private String city;
+
+    private String province;
+
+    private String district;
+
     @OneToMany(mappedBy = "seller",
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL,

@@ -1,9 +1,10 @@
 package com.phatdo.ecommerce.arena.account.controller;
 
 import com.phatdo.ecommerce.arena.account.domain.Account;
-import com.phatdo.ecommerce.arena.account.request.LoginDTO;
 import com.phatdo.ecommerce.arena.account.request.RegisterDTO;
 import com.phatdo.ecommerce.arena.account.service.AccountService;
+import com.phatdo.ecommerce.arena.customer.response.CustomerDetailDTO;
+import com.phatdo.ecommerce.arena.customer.service.CustomerService;
 import com.phatdo.ecommerce.arena.utils.exceptionhandler.domain.ArenaException;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -17,17 +18,20 @@ import static com.phatdo.ecommerce.arena.utils.commons.APIController.*;
 @RestController
 @RequestMapping(ACCOUNT_PATH)
 public class AccountController {
-
     private final AccountService accountService;
+    private final CustomerService customerService;
+
     @Autowired
-    public AccountController(AccountService accountService) {
+    public AccountController(AccountService accountService, CustomerService customerService) {
         this.accountService = accountService;
+        this.customerService = customerService;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Account> createNewAccount(@RequestBody @Valid RegisterDTO form) throws ArenaException {
+    public ResponseEntity<CustomerDetailDTO> createNewAccount(@RequestBody @Valid RegisterDTO form) throws ArenaException {
         log.info("Account with email {} is creating...", form.email());
-        return ResponseEntity.ok(this.accountService.createNewAccount(form));
+        Account account = this.accountService.createNewAccount(form);
+        return ResponseEntity.ok(CustomerDetailDTO.toDTO(this.customerService.createNewCustomer(account, form)));
     }
 
 }

@@ -10,5 +10,9 @@ public record RegisterDTO(
         @Size(min = 8, message = "Password must be at least 8 length")
         String password,
         @NotEmpty(message = "Invalid field")
-        String fullName) {
+        String fullName,
+        @NotEmpty(message = "Invalid field")
+        String telephone,
+        @NotEmpty(message = "Invalid field")
+        String country) {
 }
