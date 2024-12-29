@@ -1,6 +1,6 @@
 package com.phatdo.ecommerce.arena.account.domain;
 
-import com.phatdo.ecommerce.arena.accountseller.domain.AccountSeller;
+import com.phatdo.ecommerce.arena.seller.domain.AccountSeller;
 import com.phatdo.ecommerce.arena.customer.domain.Customer;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -8,21 +8,25 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.*;
 
 @Data
 @RequiredArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC, force = true)
 @Entity
-public class Account {
+public class Account implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     @Id
-    @Column(unique = true)
-    private final UUID uuid = new UUID(1, UUID.randomUUID().getMostSignificantBits());
+    @GeneratedValue
+    @Column(unique = true, nullable = false)
+    private UUID uuid;
 
     @Column(unique = true)
     private final String email;
-
-    private String fullName;
 
     private String password;
 

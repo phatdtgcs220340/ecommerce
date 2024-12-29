@@ -1,7 +1,6 @@
-package com.phatdo.ecommerce.arena.accountseller.domain;
+package com.phatdo.ecommerce.arena.seller.domain;
 
 import com.phatdo.ecommerce.arena.account.domain.Account;
-import com.phatdo.ecommerce.arena.seller.domain.Seller;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;

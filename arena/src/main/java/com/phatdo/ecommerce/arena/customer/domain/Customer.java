@@ -15,10 +15,13 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PUBLIC, force = true)
 public class Customer {
     @Id
-    @Column(unique = true)
-    private final UUID uuid = new UUID(1, UUID.randomUUID().getMostSignificantBits());
+    @GeneratedValue
+    @Column(unique = true, nullable = false)
+    private UUID uuid;
 
     private String avatar;
+
+    private String fullName;
 
     private String telephone;
 

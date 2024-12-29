@@ -8,12 +8,13 @@ import java.util.UUID;
 public record CustomerDetailDTO(
         AccountKey key,
         UUID customerId,
+        String fullName,
         String avatar,
         String telephone,
         String country
 ) {
     public static CustomerDetailDTO toDTO(Customer customer) {
-        AccountKey key = new AccountKey(customer.getAccount().getUuid(), customer.getAccount().getEmail(), customer.getAccount().getFullName());
-        return new CustomerDetailDTO(key, customer.getUuid(), customer.getAvatar(), customer.getTelephone(), customer.getCountry());
+        AccountKey key = AccountKey.toDTO(customer.getAccount());
+        return new CustomerDetailDTO(key, customer.getUuid(), customer.getFullName(), customer.getAvatar(), customer.getTelephone(), customer.getCountry());
     }
 }

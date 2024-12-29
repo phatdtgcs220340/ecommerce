@@ -30,11 +30,14 @@ public class OAuth2CustomToken {
                         claims.put("role", "SELLER");
                     else
                         claims.put("role", "CUSTOMER");
+
+                    String username = context.getPrincipal().getName();
+                    Account account = ((CustomUserDetail) accountService
+                            .loadUserByUsername(username))
+                            .account();
+                    claims.put("uuid", account.getUuid());
+
                     if (OidcParameterNames.ID_TOKEN.equals(context.getTokenType().getValue())) {
-                        String username = context.getPrincipal().getName();
-                        Account account = ((CustomUserDetail) accountService
-                                .loadUserByUsername(username))
-                                .account();
                         if (((List<String>) claims.get("scope")).contains("SELLER"))
                             account.setRole(Account.Role.SELLER);
                         else
