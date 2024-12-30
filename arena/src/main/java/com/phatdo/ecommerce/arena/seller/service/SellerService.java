@@ -1,5 +1,6 @@
 package com.phatdo.ecommerce.arena.seller.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.phatdo.ecommerce.arena.account.domain.Account;
 import com.phatdo.ecommerce.arena.account.domain.CustomUserDetail;
 import com.phatdo.ecommerce.arena.account.service.AccountService;
@@ -60,7 +61,7 @@ public class SellerService {
         return this.sellerRepository.findById(uuid).orElseThrow(() -> new ArenaException(SELLER_NOT_FOUND));
     }
 
-    public Seller createNewSeller(NewSellerDTO request, String username) {
+    public Seller createNewSeller(NewSellerDTO request, String username) throws JsonProcessingException {
         Account account = this.accountService.loadAndCacheAccountByUsername(AccountService.CACHE_KEY_PREFIX_ACCOUNT_BY_USERNAME + username);
 
         log.info("Creating new shop {}", request.name());
@@ -82,7 +83,7 @@ public class SellerService {
         return seller;
     }
 
-    public Page<AuthorizedSellerDTO> findAllAuthorizedSeller(String username, Pageable pageable) {
+    public Page<AuthorizedSellerDTO> findAllAuthorizedSeller(String username, Pageable pageable) throws JsonProcessingException {
         Account account = this.accountService.loadAndCacheAccountByUsername(AccountService.CACHE_KEY_PREFIX_ACCOUNT_BY_USERNAME + username);
 
         log.info("Fetch authorized seller list...");

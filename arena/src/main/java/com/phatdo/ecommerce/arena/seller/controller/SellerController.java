@@ -1,5 +1,6 @@
 package com.phatdo.ecommerce.arena.seller.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.phatdo.ecommerce.arena.account.domain.Account;
 import com.phatdo.ecommerce.arena.seller.domain.Seller;
 import com.phatdo.ecommerce.arena.seller.request.NewSellerDTO;
@@ -32,7 +33,7 @@ public class SellerController {
 
     @PostMapping
     public ResponseEntity<SellerDTO> createNewSeller(@RequestBody NewSellerDTO request,
-                                                     Authentication authentication) {
+                                                     Authentication authentication) throws JsonProcessingException {
         Seller seller = this.service.createNewSeller(request, authentication.getName());
         return ResponseEntity.ok(SellerDTO.toDTO(seller));
     }
@@ -40,7 +41,7 @@ public class SellerController {
     @GetMapping("/authorized")
     public ResponseEntity<Page<AuthorizedSellerDTO>> findAllAuthorizedSeller(@RequestParam(defaultValue = "0") int page,
                                                                              @RequestParam(defaultValue = "10") int size,
-                                                                             Authentication authentication) {
+                                                                             Authentication authentication) throws JsonProcessingException {
         Pageable pageable = PageRequest.of(page, size);
         return ResponseEntity.ok(this.service.findAllAuthorizedSeller(authentication.getName(), pageable));
     }
