@@ -21,10 +21,10 @@ import static com.phatdo.ecommerce.arena.utils.commons.APIController.ACCOUNT_PAT
 @Configuration
 public class SecurityConfig {
     private final AccountRepository accountRepository;
-    private final RedisTemplate<String, Account> redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Autowired
-    public SecurityConfig(AccountRepository accountRepository, RedisTemplate<String, Account> redisTemplate) {
+    public SecurityConfig(AccountRepository accountRepository, RedisTemplate<String, String> redisTemplate) {
         this.accountRepository = accountRepository;
         this.redisTemplate = redisTemplate;
     }

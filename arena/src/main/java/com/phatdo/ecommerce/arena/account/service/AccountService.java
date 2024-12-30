@@ -1,5 +1,6 @@
 package com.phatdo.ecommerce.arena.account.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.phatdo.ecommerce.arena.account.domain.Account;
 import com.phatdo.ecommerce.arena.account.domain.CustomUserDetail;
 import com.phatdo.ecommerce.arena.account.repository.AccountRepository;
@@ -33,7 +34,7 @@ public class AccountService extends AbstractHashMapping<Account> implements User
     @Autowired
     public AccountService(AccountRepository accountRepository,
                           PasswordEncoder passwordEncoder,
-                          RedisTemplate<String, Account> redisTemplate) {
+                          RedisTemplate<String, String> redisTemplate) {
         super(redisTemplate);
         this.accountRepository = accountRepository;
         this.passwordEncoder = passwordEncoder;
@@ -73,11 +74,11 @@ public class AccountService extends AbstractHashMapping<Account> implements User
                 .build().getClaims());
     }
 
-    public Account loadAndCacheAccountByUsername(String key) {
+    public Account loadAndCacheAccountByUsername(String key) throws JsonProcessingException {
         log.info("Try to load cache map {} for user detail", key);
-        Account existedAccount = this.LoadHash().loadHash(key);
+        Account existedAccount = this.LoadHash(Account.class).loadHash(key);
         if (Objects.isNull(existedAccount)) {
-            log.info("Generating cache map {} for user detail", key);
+            log.info("Generating cache map {} for user detail: {}", key, key.replace(CACHE_KEY_PREFIX_ACCOUNT_BY_USERNAME, ""));
             CustomUserDetail userDetail = (CustomUserDetail) this.loadUserByUsername(key.replace(CACHE_KEY_PREFIX_ACCOUNT_BY_USERNAME, ""));
             Account account = userDetail.account();
             this.WriteHash().writeHash(key, account);
