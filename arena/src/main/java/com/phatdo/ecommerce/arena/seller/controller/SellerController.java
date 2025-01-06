@@ -8,6 +8,7 @@ import com.phatdo.ecommerce.arena.seller.response.AuthorizedSellerDTO;
 import com.phatdo.ecommerce.arena.seller.response.SellerDTO;
 import com.phatdo.ecommerce.arena.seller.service.SellerService;
 import com.phatdo.ecommerce.arena.utils.commons.APIController;
+import com.phatdo.ecommerce.arena.utils.exceptionhandler.domain.ArenaException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -44,5 +46,10 @@ public class SellerController {
                                                                              Authentication authentication) throws JsonProcessingException {
         Pageable pageable = PageRequest.of(page, size);
         return ResponseEntity.ok(this.service.findAllAuthorizedSeller(authentication.getName(), pageable));
+    }
+
+    @GetMapping("/{uuid}")
+    public ResponseEntity<SellerDTO> findByUuid(@PathVariable("uuid") UUID uuid) throws ArenaException {
+        return ResponseEntity.ok(SellerDTO.toDTO(service.findById(uuid)));
     }
 }

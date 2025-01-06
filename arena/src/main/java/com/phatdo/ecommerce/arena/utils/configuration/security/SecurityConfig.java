@@ -4,6 +4,7 @@ import com.phatdo.ecommerce.arena.account.domain.Account;
 import com.phatdo.ecommerce.arena.account.repository.AccountRepository;
 import com.phatdo.ecommerce.arena.account.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -15,13 +16,19 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
-import static com.phatdo.ecommerce.arena.utils.commons.APIController.ACCOUNT_PATH;
+import static com.phatdo.ecommerce.arena.utils.commons.APIController.AUTH_PATH;
 
 @Configuration
 public class SecurityConfig {
     private final AccountRepository accountRepository;
     private final RedisTemplate<String, String> redisTemplate;
+
+    @Value("${spring.security.oauth2.resource-server.jwt.jwk-set-uri}")
+    private String keySetUri;
 
     @Autowired
     public SecurityConfig(AccountRepository accountRepository, RedisTemplate<String, String> redisTemplate) {
@@ -44,11 +51,26 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .formLogin(form -> form
-                        .loginProcessingUrl("/api/account/login"))
+                        .loginProcessingUrl("/api/auth/login"))
                 .authorizeHttpRequests(c -> c
-                        .requestMatchers(HttpMethod.POST, ACCOUNT_PATH, String.format("%s/**", ACCOUNT_PATH)).permitAll()
+                        .requestMatchers(HttpMethod.POST, AUTH_PATH, String.format("%s/**", AUTH_PATH)).permitAll()
                         .anyRequest().authenticated())
+                .oauth2ResourceServer(c -> c
+                        .jwt(j -> j
+                                .jwkSetUri(keySetUri)))
                 .csrf(AbstractHttpConfigurer::disable)
                 .build();
+    }
+
+    @Bean
+    public CorsFilter corsFilter() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.addAllowedOrigin("http://localhost:9090");
+        config.addAllowedMethod("*");
+        config.addAllowedHeader("*");
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
     }
 }
