@@ -44,8 +44,6 @@ public class AccountService extends AbstractHashMapping<Account> implements User
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Account account = accountRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
-        account.setCustomer(null);
-        account.getSellers().clear();
         return new CustomUserDetail(account);
     }
 

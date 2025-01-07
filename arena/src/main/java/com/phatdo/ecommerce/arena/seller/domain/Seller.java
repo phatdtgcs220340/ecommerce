@@ -1,5 +1,6 @@
 package com.phatdo.ecommerce.arena.seller.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,7 @@ public class Seller {
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL,
             orphanRemoval = true)
+    @JsonIgnore
     private final Set<AccountSeller> accountSellers = new HashSet<>();
 
 }

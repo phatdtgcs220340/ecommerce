@@ -1,5 +1,6 @@
 package com.phatdo.ecommerce.arena.account.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.phatdo.ecommerce.arena.seller.domain.AccountSeller;
 import com.phatdo.ecommerce.arena.customer.domain.Customer;
 import jakarta.persistence.*;
@@ -40,6 +41,7 @@ public class Account implements Serializable {
             fetch = FetchType.EAGER,
             cascade = CascadeType.ALL,
             orphanRemoval = true)
+    @JsonIgnore
     private final Set<AccountSeller> sellers = new HashSet<>();
 
     @Transient

@@ -1,5 +1,6 @@
 package com.phatdo.ecommerce.arena.customer.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.phatdo.ecommerce.arena.account.domain.Account;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -29,6 +30,7 @@ public class Customer {
 
     @OneToOne
     @JoinColumn(name = "account_uuid")
+    @JsonIgnore
     private final Account account;
 
 }
